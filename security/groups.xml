@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="model_yes_plus_rule">
+            <field name="name">Yes Plus</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="yes_plus_hr_manager" model="res.groups">
+            <field name="name">HR</field>
+            <field name="category_id" ref="yes_plus.model_yes_plus_rule"/>
+        </record>
+        <record id="yes_plus_coordinator" model="res.groups">
+            <field name="name">Coordinator</field>
+            <field name="category_id" ref="yes_plus.model_yes_plus_rule"/>
+        </record>
+
+    </data>
+</odoo>

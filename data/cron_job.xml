@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mail_yes_plus_coordinator_alert" model="mail.activity.type">
+            <field name="name">Yes Plus Activity</field>
+            <field name="res_model_id" ref="yes_plus.model_yes_plus_logic"/>
+            <field name="delay_count">30</field>
+        </record>
+    </data>
+    <record id="ir_remaining_days" model="ir.cron">
+        <field name="name">Yes Plus Cron</field>
+        <field name="model_id" ref="model_yes_plus_logic"/>
+        <field name="state">code</field>
+        <field name="code">model.coordinator_alert_message()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+    <record id="yes_plus_delay_activity_for_hr" model="ir.cron">
+        <field name="name">Yes Plus Cron Delay</field>
+        <field name="model_id" ref="model_yes_plus_logic"/>
+        <field name="state">code</field>
+        <field name="code">model.mail_for_hr_activity()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+</odoo>

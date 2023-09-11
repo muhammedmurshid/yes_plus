@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="logic_yes_plus_form_view" model="ir.ui.view">
+        <field name="name">Yes Plus</field>
+        <field name="model">yes_plus.logic</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Form">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_submit" class="oe_highlight" type="object" states='draft' string="Submit"/>
+                    <button name="action_confirm" class="oe_highlight" type="object" states='confirm' string="Confirm"/>
+                    <button name="action_cancel" type="object" states='draft,confirm' string="Cancel"/>
+
+                </header>
+                <sheet>
+                    <div>
+                        <!--                        <h2>-->
+                        <!--                            <field name="reference_no" readonly="True"/>-->
+                        <!--                        </h2>-->
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="batch_id"/>
+                            <field name="date_one"/>
+                            <field name="date_two"/>
+                            <field name="date_three"/>
+                            <field name="date_four"/>
+                            <field name="date_five"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attendance" name="attendance">
+                            <field name="yes_attendance_ids" widget="one2many">
+                                <tree string="Attendance" editable="bottom">
+                                    <field name="student_name"/>
+                                    <field name="day_one"/>
+                                    <field name="day_two"/>
+                                    <field name="day_three"/>
+                                    <field name="day_four"/>
+                                    <field name="day_five"/>
+                                    <field name="student_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="logic_yes_plus_tree_view" model="ir.ui.view">
+        <field name="name">Yes Plus</field>
+        <field name="model">yes_plus.logic</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="batch_id"/>
+                <field name="date_one"/>
+                <field name="date_two"/>
+                <field name="date_three"/>
+                <field name="date_four"/>
+                <field name="date_five"/>
+                <field name="state"/>
+            </tree>
+
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="logic_yes_plus_action">
+        <field name="name">Yes Plus</field>
+        <field name="res_model">yes_plus.logic</field>
+        <field name="view_mode">tree,form,activity</field>
+    </record>
+    <menuitem name="Yes Plus" id="menu_yes_plus"
+              web_icon="yes_plus/static/description/icon.png"
+              sequence="1"/>
+    <menuitem name="Yes Plus" id="menu_yes_plus_id" action="logic_yes_plus_action"
+              parent="menu_yes_plus" sequence="1"/>
+
+</odoo>
