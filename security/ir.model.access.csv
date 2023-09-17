@@ -4,3 +4,7 @@ access_yes_plus_base,access_details,model_yes_plus_logic,yes_plus_hr_manager,1,1
 access_yes_plus_attendance,access_details,model_yes_plus_attendance,yes_plus_hr_manager,1,1,1,1
 access_yes_plus_base_coord,access_details,model_yes_plus_logic,yes_plus_coordinator,1,1,1,1
 access_yes_plus_attendance_coord,access_details,model_yes_plus_attendance,yes_plus_coordinator,1,1,1,1
+access_yes_plus_head,access_details,model_yes_plus_logic,academic_head_yes_plus,1,1,1,1
+access_yes_plus_attendance_head,access_details,model_yes_plus_attendance,academic_head_yes_plus,1,1,1,1
+access_yes_plus_accounts,access_details,model_yes_plus_logic,yes_plus_accounts,1,1,1,1
+access_yes_plus_attendance_accounts,access_details,model_yes_plus_attendance,yes_plus_accounts,1,1,1,1

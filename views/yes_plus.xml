@@ -10,18 +10,26 @@
                     <field name="state" widget="statusbar"/>
                     <button name="action_submit" class="oe_highlight" type="object" states='draft' string="Submit"/>
                     <button name="action_confirm" class="oe_highlight" type="object" states='confirm' string="Confirm"/>
-                    <button name="action_cancel" type="object" states='draft,confirm' string="Cancel"/>
+                    <button name="approval_for_academic_head" string="Head Approve" class="oe_highlight" type="object"
+                            states="academic_head_approve" groups="yes_plus.academic_head_yes_plus"/>
+                    <button name="accounts_approval" string="Done" class="oe_highlight" type="object"
+                            states="accounts_approval" groups="yes_plus.yes_plus_accounts"/>
+                    <button name="action_cancel" type="object"
+                            states='draft,confirm,academic_head_approve,accounts_approval' string="Cancel"/>
 
                 </header>
                 <sheet>
-                    <div>
-                        <!--                        <h2>-->
-                        <!--                            <field name="reference_no" readonly="True"/>-->
-                        <!--                        </h2>-->
+                    <div class="oe_title pr-0">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="name" class="o_task_name text-truncate" placeholder="Yes Plus Title..."
+                                   default_focus="1"/>
+
+                        </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="trainer_name"/>
+                            <!--                            <field name="name"/>-->
                             <field name="batch_id"/>
                             <field name="date_one"/>
                             <field name="date_two"/>
@@ -29,17 +37,25 @@
                             <field name="date_four"/>
                             <field name="date_five"/>
                         </group>
+                        <group>
+                            <field name="coordinator_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Attendance" name="attendance">
                             <field name="yes_attendance_ids" widget="one2many">
                                 <tree string="Attendance" editable="bottom">
                                     <field name="student_name"/>
-                                    <field name="day_one"/>
-                                    <field name="day_two"/>
-                                    <field name="day_three"/>
-                                    <field name="day_four"/>
-                                    <field name="day_five"/>
+                                    <field name="day_one_check" invisible="1"/>
+                                    <field name="day_two_check" invisible="1"/>
+                                    <field name="day_three_check" invisible="1"/>
+                                    <field name="day_four_check" invisible="1"/>
+                                    <field name="day_five_check" invisible="1"/>
+                                    <field name="day_one" attrs="{'invisible': [('day_one_check', '=', False)]}"/>
+                                    <field name="day_two" attrs="{'invisible': [('day_two_check', '=', False)]}"/>
+                                    <field name="day_three" attrs="{'invisible': [('day_three_check', '=', False)]}"/>
+                                    <field name="day_four" attrs="{'invisible': [('day_four_check', '=', False)]}"/>
+                                    <field name="day_five" attrs="{'invisible': [('day_five_check', '=', False)]}"/>
                                     <field name="student_id" invisible="1"/>
                                 </tree>
                             </field>
@@ -61,14 +77,9 @@
         <field name="model">yes_plus.logic</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
+                <field name="coordinator_id"/>
                 <field name="batch_id"/>
-                <field name="date_one"/>
-                <field name="date_two"/>
-                <field name="date_three"/>
-                <field name="date_four"/>
-                <field name="date_five"/>
-                <field name="state"/>
+                <field name="trainer_name"/>
             </tree>
 
         </field>

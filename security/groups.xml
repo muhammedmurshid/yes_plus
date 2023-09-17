@@ -13,6 +13,14 @@
             <field name="name">Coordinator</field>
             <field name="category_id" ref="yes_plus.model_yes_plus_rule"/>
         </record>
+        <record id="yes_plus_accounts" model="res.groups">
+            <field name="name">Accounts</field>
+            <field name="category_id" ref="yes_plus.model_yes_plus_rule"/>
+        </record>
+        <record id="academic_head_yes_plus" model="res.groups">
+            <field name="name">Academic Head</field>
+            <field name="category_id" ref="yes_plus.model_yes_plus_rule"/>
+        </record>
 
     </data>
 </odoo>

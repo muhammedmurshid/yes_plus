@@ -11,16 +11,22 @@ class YesPlus(models.Model):
     _description = 'Yes Plus'
 
     name = fields.Char(string='Name')
+    trainer_name = fields.Char(string='Trainer Name', required=True)
     date_one = fields.Date('Day One')
     date_two = fields.Date('Day Two')
     date_three = fields.Date('Day Three')
     date_four = fields.Date('Day Four')
     date_five = fields.Date('Day Five')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('complete', 'Completed'), ('cancel', 'Cancelled')],
+        [('draft', 'Draft'), ('confirm', 'Confirmed'),
+         ('academic_head_approve', 'Academic Head Approval'), ('accounts_approval', 'Accountant Approval'),
+         ('complete', 'Completed'),
+         ('cancel', 'Cancelled')],
         string='Status',
         default='draft',
     )
+    coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user,
+                                     readonly=True)
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
 
@@ -99,11 +105,11 @@ class YesPlus(models.Model):
             [('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
                 'activity_type_id', '=', self.env.ref('yes_plus.mail_yes_plus_coordinator_alert').id)])
         activity_id.action_feedback(feedback=f'Yes Plus Done')
-        other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id), (
-            'activity_type_id', '=', self.env.ref('yes_plus.mail_yes_plus_coordinator_alert').id)])
-        other_activity_ids.unlink()
+        # other_activity_ids = self.env['mail.activity'].search([('res_id', '=', self.id), (
+        #     'activity_type_id', '=', self.env.ref('yes_plus.mail_yes_plus_coordinator_alert').id)])
+        # other_activity_ids.unlink()
         # activity_id.unlink()
-        self.state = 'complete'
+        self.state = 'academic_head_approve'
 
     def action_cancel(self):
         self.state = 'cancel'
@@ -137,3 +143,36 @@ class YesPlus(models.Model):
                     if date_1_days_later == today.date():
                         i.activity_schedule('yes_plus.mail_yes_plus_coordinator_alert', user_id=j.id,
                                             note=f'Delayed: Yes Plus is running behind schedule.')
+
+    @api.onchange('date_one', 'date_two', 'date_three', 'date_four', 'date_five')
+    def yes_plus_date_one_test(self):
+        print('yes')
+        if self.date_one:
+            self.yes_attendance_ids.day_one_check = True
+        else:
+            self.yes_attendance_ids.day_one_check = False
+        if self.date_two:
+            self.yes_attendance_ids.day_two_check = True
+        else:
+            self.yes_attendance_ids.day_two_check = False
+        if self.date_three:
+            self.yes_attendance_ids.day_three_check = True
+        else:
+            self.yes_attendance_ids.day_three_check = False
+        if self.date_four:
+            self.yes_attendance_ids.day_four_check = True
+        else:
+            self.yes_attendance_ids.day_four_check = False
+        if self.date_five:
+            self.yes_attendance_ids.day_five_check = True
+        else:
+            self.yes_attendance_ids.day_five_check = False
+
+    def approval_for_academic_head(self):
+        if self.coordinator_id.employee_id.parent_id.user_id.id == self.env.user.id:
+            self.state = 'accounts_approval'
+        else:
+            raise UserError('You are not authorized')
+
+    def accounts_approval(self):
+        self.state = 'complete'
