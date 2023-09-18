@@ -30,6 +30,12 @@ class YesPlus(models.Model):
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
 
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.name:
+                rec.display_name = rec.name + ' - ' + rec.trainer_name
+            else:
+                rec.display_name = rec.trainer_name
     def action_submit(self):
         batch = self.env['logic.base.batch'].search([])
         for i in batch:
@@ -71,35 +77,25 @@ class YesPlus(models.Model):
         self.yes_attendance_ids = abc
 
     def action_confirm(self):
-        # student = self.env['logic.students'].search(
-        #     [('id', 'in', [stud.student_id for stud in self.yes_attendance_ids])])
-        # print(student, 'rrr')
-        # print([stud.student_id for stud in self.yes_attendance_ids])
-        # students = []
-        # for rec in student:
-        #     for i in self.yes_attendance_ids:
-        #         print(i.id, 'id')
-        #         # print(str(k.student_id), 'student id')
-        #         if rec.id == i.student_id:
-        #             print('yeaa')
-        #
-        #             stdt = {
-        #                 'name': i.student_name,
-        #                 'attendance': i.attendance,
-        #                 'date': self.date_one,
-        #                 'stud_id': i.student_id
-        #             }
-        #             students.append((0, 0, stdt))
-        #             rec.yes_plus_att_ids = students
-        #
-        #         else:
-        #             print('noo')
-        #         std = self.env['logic.students'].search([])
-        #         for jk in std:
-        #             for jkm in jk.yes_plus_att_ids:
-        #                 print(jkm.name, 'name')
-        #                 if jkm.stud_id != jk.id:
-        #                     jkm.unlink()
+        student = self.env['logic.students'].search(
+            [('id', 'in', [stud.student_id for stud in self.yes_attendance_ids])])
+        print(student, 'rrr')
+        print([stud.student_id for stud in self.yes_attendance_ids])
+        students = []
+        for rec in student:
+
+            for i in self.yes_attendance_ids:
+                if rec.id == i.student_id:
+                    rec.day_one = i.day_one
+                    rec.day_one_date = self.date_one
+                    rec.day_two = i.day_two
+                    rec.day_two_date = self.date_two
+                    rec.day_three = i.day_three
+                    rec.day_three_date = self.date_three
+                    rec.day_four = i.day_four
+                    rec.day_four_date = self.date_four
+                    rec.day_five = i.day_five
+                    rec.day_five_date = self.date_five
 
         activity_id = self.env['mail.activity'].search(
             [('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
