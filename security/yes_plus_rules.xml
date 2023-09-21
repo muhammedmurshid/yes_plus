@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="yes_plus_academic_head_rules" model="ir.rule">
+        <field name="name">Academic head yes plus</field>
+        <field name="model_id" ref="model_yes_plus_logic"/>
+        <field name="domain_force">['|',('coordinator_id.employee_id.parent_id.user_id.id','=', user.id), ('coordinator_id.id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('yes_plus.academic_head_yes_plus'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="yes_plus_coordinator_rules" model="ir.rule">
+        <field name="name">Coordinator yes plus</field>
+        <field name="model_id" ref="model_yes_plus_logic"/>
+        <field name="domain_force">[('coordinator_id.id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('yes_plus.yes_plus_coordinator'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

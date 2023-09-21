@@ -29,8 +29,13 @@
                     <group>
                         <group>
                             <field name="trainer_name"/>
-                            <!--                            <field name="name"/>-->
                             <field name="batch_id"/>
+                            <field name="date"/>
+                            <!--                            <field name="name"/>-->
+
+                        </group>
+                        <group>
+
                             <field name="date_one"/>
                             <field name="date_two"/>
                             <field name="date_three"/>
@@ -38,7 +43,8 @@
                             <field name="date_five"/>
                         </group>
                         <group>
-                            <field name="coordinator_id"/>
+                            <field name="make_visible_academic_head_yes_plus" invisible="1"/>
+                            <field name="coordinator_id" attrs="{'readonly': [('make_visible_academic_head_yes_plus','=', False)]}"/>
                         </group>
                     </group>
                     <notebook>

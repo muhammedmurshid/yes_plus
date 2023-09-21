@@ -12,6 +12,7 @@ class YesPlus(models.Model):
 
     name = fields.Char(string='Name')
     trainer_name = fields.Char(string='Trainer Name', required=True)
+    date = fields.Date('Added Date', required=True, default=lambda self: fields.Date.context_today(self))
     date_one = fields.Date('Day One')
     date_two = fields.Date('Day Two')
     date_three = fields.Date('Day Three')
@@ -25,10 +26,19 @@ class YesPlus(models.Model):
         string='Status',
         default='draft',
     )
-    coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user,
-                                     readonly=True)
+    coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user)
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('make_visible_academic_head_yes_plus', 'batch_id')
+    def _compute_academic_head_yes_plus(self):
+        res_user = self.env['res.users'].search([('id', '=', self.env.user.id)])
+        if res_user.has_group('yes_plus.academic_head_yes_plus'):
+            self.make_visible_academic_head_yes_plus = True
+        else:
+            self.make_visible_academic_head_yes_plus = False
+    make_visible_academic_head_yes_plus = fields.Boolean(string="User", compute='_compute_academic_head_yes_plus')
 
     def _compute_display_name(self):
         for rec in self:
@@ -36,6 +46,7 @@ class YesPlus(models.Model):
                 rec.display_name = rec.name + ' - ' + rec.trainer_name
             else:
                 rec.display_name = rec.trainer_name
+
     def action_submit(self):
         batch = self.env['logic.base.batch'].search([])
         for i in batch:

@@ -6,6 +6,7 @@
     'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',
+        'security/yes_plus_rules.xml',
         'views/yes_plus.xml',
         'data/cron_job.xml',
 
