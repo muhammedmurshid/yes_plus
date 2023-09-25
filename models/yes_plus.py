@@ -26,10 +26,13 @@ class YesPlus(models.Model):
         string='Status',
         default='draft',
     )
-    coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user)
+    coordinator_id = fields.Many2one('res.users', string='Assign to Coordinator',
+                                     related='batch_id.academic_coordinator')
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
     display_name = fields.Char(compute='_compute_display_name', store=True)
+    programme_coordinator = fields.Many2one('res.users', string='Programme Coordinator',
+                                            default=lambda self: self.env.user, readonly=True)
 
     @api.depends('make_visible_academic_head_yes_plus', 'batch_id')
     def _compute_academic_head_yes_plus(self):
@@ -38,6 +41,7 @@ class YesPlus(models.Model):
             self.make_visible_academic_head_yes_plus = True
         else:
             self.make_visible_academic_head_yes_plus = False
+
     make_visible_academic_head_yes_plus = fields.Boolean(string="User", compute='_compute_academic_head_yes_plus')
 
     def _compute_display_name(self):
@@ -183,3 +187,9 @@ class YesPlus(models.Model):
 
     def accounts_approval(self):
         self.state = 'complete'
+
+    @api.depends('yes_attendance_ids')
+    def _compute_attendance(self):
+        for rec in self:
+            rec.attended_counts = len(rec.yes_attendance_ids)
+    attended_counts = fields.Integer(compute='_compute_attendance', store=True)
