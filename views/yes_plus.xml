@@ -67,7 +67,8 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="attended_counts" string="Yes+ Strength" />
+                                <field name="batch_strength" string="Batch Strength" />
+                                <field name="attended_counts" string="Yes+ Attended Strength" />
                             </group>
                         </page>
                     </notebook>

@@ -98,15 +98,27 @@ class YesPlus(models.Model):
         print([stud.student_id for stud in self.yes_attendance_ids])
         students = []
         for rec in student:
-
             for i in self.yes_attendance_ids:
                 if rec.id == i.student_id:
-                    rec.day_one = i.day_one
-                    rec.day_one_date = self.date_one
-                    rec.day_two = i.day_two
-                    rec.day_two_date = self.date_two
-                    rec.day_three = i.day_three
-                    rec.day_three_date = self.date_three
+                    if i.day_one == True:
+                        rec.day_one_date = self.date_one
+                        rec.day_one = 'present'
+                    else:
+                        rec.day_one_date = self.date_one
+                        rec.day_one = 'absent'
+                    if i.day_two == True:
+                        rec.day_two_date = self.date_two
+                        rec.day_two = 'present'
+                    else:
+                        rec.day_two_date = self.date_two
+                        rec.day_two = 'absent'
+                    if i.day_three == True:
+                        rec.day_three_date = self.date_three
+                        rec.day_three = 'present'
+                    else:
+                        rec.day_three_date = self.date_three
+                        rec.day_three = 'absent'
+
                     rec.day_four = i.day_four
                     rec.day_four_date = self.date_four
                     rec.day_five = i.day_five
@@ -193,3 +205,9 @@ class YesPlus(models.Model):
         for rec in self:
             rec.attended_counts = len(rec.yes_attendance_ids)
     attended_counts = fields.Integer(compute='_compute_attendance', store=True)
+
+    @api.depends('batch_id')
+    def _compute_total_batch_strength(self):
+        for rec in self:
+            rec.batch_strength = len(rec.yes_attendance_ids)
+    batch_strength = fields.Integer(compute='_compute_total_batch_strength', store=True)
