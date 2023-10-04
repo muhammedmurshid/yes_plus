@@ -20,3 +20,32 @@ class YesPlusAttendanceForFiveDays(models.Model):
     day_three_check = fields.Boolean()
     day_four_check = fields.Boolean()
     day_five_check = fields.Boolean()
+
+    stud_attendance_yes_plus = fields.Float(string="Attendance", compute="_compute_stud_attendance")
+
+    def _compute_stud_attendance(self):
+        for record in self:
+            total_present = 0
+            if record.day_one == True:
+                total_present += 1
+            elif record.day_one == False:
+                total_present += 0
+
+            if record.day_two == True:
+                total_present += 1
+            elif record.day_two == False:
+                total_present += 0
+
+            if record.day_three == True:
+                total_present += 1
+            elif record.day_three == False:
+                total_present += 0
+            if record.day_four == 'full_day':
+                total_present += 1
+            elif record.day_four == 'half_day':
+                total_present += 0.5
+            if record.day_five == 'full_day':
+                total_present += 1
+            elif record.day_five == 'half_day':
+                total_present += 0.5
+            record.stud_attendance_yes_plus = total_present

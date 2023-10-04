@@ -47,6 +47,9 @@
                             <field name="make_visible_academic_head_yes_plus" invisible="1"/>
                             <field name="coordinator_id"/>
                         </group>
+                        <group>
+                            <field name="yes_avg_attendance"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Attendance" name="attendance">
@@ -64,11 +67,12 @@
                                     <field name="day_four" attrs="{'invisible': [('day_four_check', '=', False)]}"/>
                                     <field name="day_five" attrs="{'invisible': [('day_five_check', '=', False)]}"/>
                                     <field name="student_id" invisible="1"/>
+                                    <field name="stud_attendance_yes_plus"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="batch_strength" string="Batch Strength" />
-                                <field name="attended_counts" string="Yes+ Attended Strength" />
+                                <field name="batch_strength" string="Batch Strength"/>
+                                <field name="attended_counts" string="Yes+ Attended Strength"/>
                             </group>
                         </page>
                     </notebook>

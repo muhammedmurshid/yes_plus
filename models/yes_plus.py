@@ -204,10 +204,61 @@ class YesPlus(models.Model):
     def _compute_attendance(self):
         for rec in self:
             rec.attended_counts = len(rec.yes_attendance_ids)
+
     attended_counts = fields.Integer(compute='_compute_attendance', store=True)
 
     @api.depends('batch_id')
     def _compute_total_batch_strength(self):
         for rec in self:
             rec.batch_strength = len(rec.yes_attendance_ids)
+
     batch_strength = fields.Integer(compute='_compute_total_batch_strength', store=True)
+
+    @api.depends('yes_attendance_ids.day_one', 'yes_attendance_ids.day_two', 'yes_attendance_ids.day_three',
+                 'yes_attendance_ids.day_four', 'yes_attendance_ids.day_five')
+    def _compute_yes_plus_avg_attendance(self):
+        for record in self:
+            if record.yes_attendance_ids:
+                total_attendance = 0
+                for yes in record.yes_attendance_ids:
+                    if record.date_one:
+                        if yes.day_one == True:
+                            total_attendance += 1
+                        elif yes.day_one == False:
+                            total_attendance += 0
+                    if record.date_two:
+                        if yes.day_two == True:
+                            total_attendance += 1
+                        elif yes.day_two == False:
+                            total_attendance += 0
+                    if record.date_three:
+                        if yes.day_three == True:
+                            total_attendance += 1
+                        elif yes.day_three == False:
+                            total_attendance += 0
+                    if record.date_four:
+                        if yes.day_four == 'full_day':
+                            total_attendance += 1
+                        elif yes.day_four == 'half_day':
+                            total_attendance += 0.5
+                    if record.date_five:
+                        if yes.day_five == 'full_day':
+                            total_attendance += 1
+                        elif yes.day_five == 'half_day':
+                            total_attendance += 0.5
+                if record.date_one and record.date_two and record.date_three and record.date_four and record.date_five:
+                    record.yes_avg_attendance = total_attendance / 5
+                elif record.date_one and record.date_two and record.date_three and record.date_four:
+                    record.yes_avg_attendance = total_attendance / 4
+                elif record.date_one and record.date_two and record.date_three:
+                    record.yes_avg_attendance = total_attendance / 3
+                elif record.date_one and record.date_two:
+                    record.yes_avg_attendance = total_attendance / 2
+                else:
+                    record.yes_avg_attendance = total_attendance
+            else:
+                record.yes_avg_attendance = 0
+        print(self.yes_avg_attendance, 'yes_avg_attendance')
+
+    yes_avg_attendance = fields.Float(compute='_compute_yes_plus_avg_attendance', store=True,
+                                      string='Yes Plus Average Attendance')
