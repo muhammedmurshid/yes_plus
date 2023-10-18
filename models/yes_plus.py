@@ -44,12 +44,12 @@ class YesPlus(models.Model):
 
     make_visible_academic_head_yes_plus = fields.Boolean(string="User", compute='_compute_academic_head_yes_plus')
 
-    def _compute_display_name(self):
-        for rec in self:
-            if rec.name:
-                rec.display_name = rec.name + ' - ' + rec.trainer_name
-            else:
-                rec.display_name = rec.trainer_name
+    # def _compute_display_name(self):
+    #     for rec in self:
+    #         if rec.name:
+    #             rec.display_name = rec.name + ' - ' + rec.trainer_name
+    #         else:
+    #             rec.display_name = rec.trainer_name
 
     def action_submit(self):
         batch = self.env['logic.base.batch'].search([])
@@ -139,7 +139,6 @@ class YesPlus(models.Model):
 
     def coordinator_alert_message(self):
         activities_to_remind = self.env['yes_plus.logic'].search([])
-        print(activities_to_remind, 'activities_to_remind')
         # if jj.state not in 'confirm':
         #     jj.state_bool = True
         for i in activities_to_remind:
@@ -170,26 +169,27 @@ class YesPlus(models.Model):
     @api.onchange('date_one', 'date_two', 'date_three', 'date_four', 'date_five')
     def yes_plus_date_one_test(self):
         print('yes')
-        if self.date_one:
-            self.yes_attendance_ids.day_one_check = True
-        else:
-            self.yes_attendance_ids.day_one_check = False
-        if self.date_two:
-            self.yes_attendance_ids.day_two_check = True
-        else:
-            self.yes_attendance_ids.day_two_check = False
-        if self.date_three:
-            self.yes_attendance_ids.day_three_check = True
-        else:
-            self.yes_attendance_ids.day_three_check = False
-        if self.date_four:
-            self.yes_attendance_ids.day_four_check = True
-        else:
-            self.yes_attendance_ids.day_four_check = False
-        if self.date_five:
-            self.yes_attendance_ids.day_five_check = True
-        else:
-            self.yes_attendance_ids.day_five_check = False
+        for rec in self:
+            if rec.date_one:
+                rec.yes_attendance_ids.day_one_check = True
+            else:
+                rec.yes_attendance_ids.day_one_check = False
+            if rec.date_two:
+                rec.yes_attendance_ids.day_two_check = True
+            else:
+                rec.yes_attendance_ids.day_two_check = False
+            if rec.date_three:
+                rec.yes_attendance_ids.day_three_check = True
+            else:
+                rec.yes_attendance_ids.day_three_check = False
+            if rec.date_four:
+                rec.yes_attendance_ids.day_four_check = True
+            else:
+                rec.yes_attendance_ids.day_four_check = False
+            if rec.date_five:
+                rec.yes_attendance_ids.day_five_check = True
+            else:
+                rec.yes_attendance_ids.day_five_check = False
 
     def approval_for_academic_head(self):
         if self.coordinator_id.employee_id.parent_id.user_id.id == self.env.user.id:
@@ -258,7 +258,7 @@ class YesPlus(models.Model):
                     record.yes_avg_attendance = total_attendance
             else:
                 record.yes_avg_attendance = 0
-        print(self.yes_avg_attendance, 'yes_avg_attendance')
+        # print(self.yes_avg_attendance, 'yes_avg_attendance')
 
     yes_avg_attendance = fields.Float(compute='_compute_yes_plus_avg_attendance', store=True,
                                       string='Yes Plus Average Attendance')
