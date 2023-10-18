@@ -56,25 +56,26 @@ class YesPlus(models.Model):
         for i in batch:
             if self.batch_id.id == i.id:
                 self.state = 'confirm'
-                if self.date_one:
-                    if not i.from_date <= self.date_one <= i.to_date:
-                        raise UserError('Day one Date from must be less than date to')
-                elif self.date_two:
-                    if not i.from_date <= self.date_two <= i.to_date:
-                        raise UserError('Day two Date to must be less than date to')
-                elif self.date_three:
-                    if not i.from_date <= self.date_three <= i.to_date:
-                        raise UserError('Day three Date to must be less than date to')
-                elif self.date_four:
-                    if not i.from_date <= self.date_four <= i.to_date:
-                        raise UserError('Day four Date to must be less than date to')
+                if self.batch_id.from_date and self.batch_id.to_date:
+                    if self.date_one:
+                        if not i.from_date <= self.date_one <= i.to_date:
+                            raise UserError('Day one Date from must be less than date to')
+                    elif self.date_two:
+                        if not i.from_date <= self.date_two <= i.to_date:
+                            raise UserError('Day two Date to must be less than date to')
+                    elif self.date_three:
+                        if not i.from_date <= self.date_three <= i.to_date:
+                            raise UserError('Day three Date to must be less than date to')
+                    elif self.date_four:
+                        if not i.from_date <= self.date_four <= i.to_date:
+                            raise UserError('Day four Date to must be less than date to')
 
-                elif self.date_five:
-                    if not i.from_date <= self.date_five <= i.to_date:
-                        raise UserError('Day five Date to must be less than date to')
+                    elif self.date_five:
+                        if not i.from_date <= self.date_five <= i.to_date:
+                            raise UserError('Day five Date to must be less than date to')
 
-                else:
-                    self.state = 'confirm'
+                    else:
+                        self.state = 'confirm'
 
     @api.onchange('batch_id')
     def onchange_batch_id(self):
