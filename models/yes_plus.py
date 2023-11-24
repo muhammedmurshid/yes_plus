@@ -34,6 +34,10 @@ class YesPlus(models.Model):
     display_name = fields.Char(compute='_compute_display_name', store=True)
     programme_coordinator = fields.Many2one('res.users', string='Programme Coordinator',
                                             default=lambda self: self.env.user, readonly=True)
+    digital_support_received = fields.Boolean(string='Digital Support Received')
+    rating = fields.Selection(
+        selection=[('0', 'No rating'), ('1', 'Very Poor'), ('2', 'Poor'), ('3', 'Average'), ('4', 'Good'),
+                   ('5', 'Very Good')], string="Rating", default='0')
 
     @api.depends('make_visible_academic_head_yes_plus', 'batch_id')
     def _compute_academic_head_yes_plus(self):
