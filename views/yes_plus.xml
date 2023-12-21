@@ -30,6 +30,7 @@
                         <group>
                             <field name="trainer_name"/>
                             <field name="batch_id"/>
+                            <field name="course_id"/>
                             <field name="branch"/>
                             <field name="date"/>
                             <!--                            <field name="name"/>-->
@@ -52,8 +53,10 @@
                             <field name="yes_avg_attendance"/>
                         </group>
                         <group string="Rating" attrs="{'invisible': [('state', '!=', 'complete')]}">
-                            <field name="digital_support_received" attrs="{'invisible': [('state', '!=', 'complete')]}"/>
-                            <field name="rating" widget="priority" attrs="{'invisible': [('digital_support_received', '!=', True)]}"/>
+                            <field name="digital_support_received"
+                                   attrs="{'invisible': [('state', '!=', 'complete')]}"/>
+                            <field name="rating" widget="priority"
+                                   attrs="{'invisible': [('digital_support_received', '!=', True)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -100,6 +103,11 @@
                 <field name="coordinator_id"/>
                 <field name="batch_id"/>
                 <field name="trainer_name"/>
+                <field name="date_one"/>
+                <field name="date_two" optional="hide"/>
+                <field name="date_three" optional="hide"/>
+                <field name="date_four" optional="hide"/>
+                <field name="date_five" optional="hide"/>
                 <field name="state" widget="badge"/>
             </tree>
 

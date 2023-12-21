@@ -30,6 +30,7 @@ class YesPlus(models.Model):
                                      related='batch_id.academic_coordinator')
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
     branch = fields.Many2one('logic.base.branches', related='batch_id.branch_id', string='Branch')
+    course_id = fields.Many2one('logic.base.courses', string='Course', related='batch_id.course_id')
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
     display_name = fields.Char(compute='_compute_display_name', store=True)
     programme_coordinator = fields.Many2one('res.users', string='Programme Coordinator',
