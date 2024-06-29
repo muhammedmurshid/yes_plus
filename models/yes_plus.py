@@ -29,6 +29,7 @@ class YesPlus(models.Model):
     coordinator_id = fields.Many2one('res.users', string='Assign to Coordinator',
                                      related='batch_id.academic_coordinator')
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
+    batch_ids = fields.Many2many('logic.base.batch', string='Batches', help="if you want to add multiple batch",)
     branch = fields.Many2one('logic.base.branches', related='batch_id.branch_id', string='Branch')
     course_id = fields.Many2one('logic.base.courses', string='Course', related='batch_id.course_id')
     yes_attendance_ids = fields.One2many('yes_plus.attendance', 'yes_plus_attendance_id', string='Attendance')
@@ -83,19 +84,27 @@ class YesPlus(models.Model):
                     else:
                         self.state = 'confirm'
 
-    @api.onchange('batch_id')
+    @api.onchange('batch_id', 'batch_ids')
     def onchange_batch_id(self):
-        students = self.env['logic.students'].search([('batch_id', '=', self.batch_id.id)])
+        students = self.env['logic.students'].search([])
         unlink_commands = [(3, child.id) for child in self.yes_attendance_ids]
         self.write({'yes_attendance_ids': unlink_commands})
         abc = []
         for i in students:
-            res_list = {
-                'student_name': i.name,
-                'student_id': i.id,
+            if i.batch_id.id == self.batch_id.id:
+                res_list = {
+                    'student_name': i.name,
+                    'student_id': i.id,
 
-            }
-            abc.append((0, 0, res_list))
+                }
+                abc.append((0, 0, res_list))
+            if i.batch_id.id in self.batch_ids.ids:
+                res_list = {
+                    'student_name': i.name,
+                    'student_id': i.id,
+
+                }
+                abc.append((0, 0, res_list))
         self.yes_attendance_ids = abc
 
     def action_confirm(self):
@@ -149,15 +158,16 @@ class YesPlus(models.Model):
         # if jj.state not in 'confirm':
         #     jj.state_bool = True
         for i in activities_to_remind:
-            one_day_before = i.date_one - timedelta(days=1)
-            print(one_day_before, 'before')
-            if one_day_before == datetime.now().date():
-                print(i.name, 'rec')
-                if i.state == 'confirm':
-                    users = activities_to_remind.env.ref('yes_plus.yes_plus_coordinator').users
-                    for j in users:
-                        i.activity_schedule('yes_plus.mail_yes_plus_coordinator_alert', user_id=j.id,
-                                            note=f'Tomorrow: Yes Plus reminder.')
+            if i.date_one:
+                one_day_before = i.date_one - timedelta(days=1)
+                print(one_day_before, 'before')
+                if one_day_before == datetime.now().date():
+                    print(i.name, 'rec')
+                    if i.state == 'confirm':
+                        users = activities_to_remind.env.ref('yes_plus.yes_plus_coordinator').users
+                        for j in users:
+                            i.activity_schedule('yes_plus.mail_yes_plus_coordinator_alert', user_id=j.id,
+                                                note=f'Tomorrow: Yes Plus reminder.')
             # if i.state == 'submit':
 
     def mail_for_hr_activity(self):
@@ -214,7 +224,7 @@ class YesPlus(models.Model):
 
     attended_counts = fields.Integer(compute='_compute_attendance', store=True)
 
-    @api.depends('batch_id')
+    @api.depends('batch_id', 'batch_ids')
     def _compute_total_batch_strength(self):
         for rec in self:
             rec.batch_strength = len(rec.yes_attendance_ids)
